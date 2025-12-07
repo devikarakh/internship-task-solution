@@ -1,0 +1,31 @@
+Internship assignment for backend developer (FastAPI + MySQL)
+===========================================================
+
+Context: The project already supports basic registration, login, and storing arbitrary data records. Several issues are present on purpose so we can evaluate your debugging and feature work.
+
+Core tasks
+----------
+1) Simple task: fix login verification
+   - File: app/crud.py (function `authenticate_user` is comparing hashed passwords incorrectly).
+   - Goal: use the configured password hashing (`CryptContext`) so that login succeeds only with correct credentials.
+
+2) Simple task: harden registration
+   - File: app/main.py, app/crud.py
+   - Goal: ensure duplicate emails return a meaningful error and that password strength is enforced/validated consistently.
+
+3) API task: create a record search endpoint
+   - File: app/main.py (hint: reuse patterns from `list_records`).
+   - Goal: add `/records/search` that allows filtering by category and limiting by a created_at date range.
+   - Return the same shape as `DataRecordOut`.
+
+4) Complex data task: implement aggregation in `/records/stats`
+   - File: app/main.py
+   - Goal: return a JSON object with per-category counts and the most recent created_at for each category using efficient SQLAlchemy queries.
+
+5) Bonus bug-hunt: identify any unhandled error paths
+   - Inspect the codebase for missing error handling (e.g., database connectivity). Add minimal logging or error responses where appropriate.
+
+Deliverables
+------------
+- Updated FastAPI endpoints that satisfy the above tasks.
+- Brief notes in your pull request about what you changed and how to test.
