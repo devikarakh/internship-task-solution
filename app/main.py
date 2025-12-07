@@ -2,7 +2,7 @@ from typing import List
 from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-
+from datetime import datetime
 from . import models, schemas, crud
 from .database import engine, Base, get_db
 
@@ -42,6 +42,20 @@ def create_record(record: schemas.DataRecordCreate, db: Session = Depends(get_db
 @app.get("/records", response_model=List[schemas.DataRecordOut])
 def list_records(limit: int = 50, skip: int = 0, db: Session = Depends(get_db)):
     return crud.list_records(db, limit=limit, skip=skip)
+
+@app.get("/records/search", response_model=List[schemas.DataRecordOut])
+def search_records(
+    category: str = None,
+    start_date: datetime = None,
+    end_date: datetime = None,
+    db: Session = Depends(get_db)
+):
+    return crud.search_records(
+        db,
+        category=category,
+        start_date=start_date,
+        end_date=end_date,
+    )
 
 
 @app.get("/records/stats")

@@ -2,6 +2,7 @@ from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from passlib.context import CryptContext
+from datetime import datetime
 import re
 
 from . import models, schemas
@@ -96,5 +97,22 @@ def list_records(db: Session, limit: int = 50, skip: int = 0):
         .order_by(models.DataRecord.created_at.desc())
         .offset(skip)
         .limit(limit)
+        .all()
+    )
+
+def search_records(db: Session, category: str = None, start_date: datetime = None, end_date: datetime = None):
+    query = db.query(models.DataRecord)
+
+    if category:
+        query = query.filter(models.DataRecord.category == category)
+
+    if start_date:
+        query = query.filter(models.DataRecord.created_at >= start_date)
+
+    if end_date:
+        query = query.filter(models.DataRecord.created_at <= end_date)
+
+    return (
+        query.order_by(models.DataRecord.created_at.desc())
         .all()
     )
