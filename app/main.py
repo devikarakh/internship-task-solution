@@ -60,3 +60,22 @@ def search_records(
 @app.get("/records/stats")
 def record_statistics(db: Session = Depends(get_db)):
     return crud.record_stats(db)
+
+@app.put("/records/{record_id}", response_model=schemas.DataRecordOut)
+def update_record(
+    record_id: int,
+    payload: schemas.DataRecordCreate,
+    db: Session = Depends(get_db)
+):
+    updated = crud.update_record(db, record_id, payload)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Record not found")
+    return updated
+
+
+@app.delete("/records/{record_id}")
+def delete_record(record_id: int, db: Session = Depends(get_db)):
+    deleted = crud.delete_record(db, record_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Record not found")
+    return {"status": "deleted"}

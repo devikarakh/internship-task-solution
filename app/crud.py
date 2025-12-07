@@ -139,3 +139,26 @@ def record_stats(db: Session):
         }
 
     return stats
+
+def update_record(db: Session, record_id: int, data: schemas.DataRecordCreate):
+    record = db.query(models.DataRecord).filter(models.DataRecord.id == record_id).first()
+    if not record:
+        return None  # main.py will convert this into a 404
+
+    record.title = data.title
+    record.category = data.category
+    record.payload = data.payload
+
+    db.commit()
+    db.refresh(record)
+    return record
+
+
+def delete_record(db: Session, record_id: int):
+    record = db.query(models.DataRecord).filter(models.DataRecord.id == record_id).first()
+    if not record:
+        return False   # main.py will turn this into 404
+
+    db.delete(record)
+    db.commit()
+    return True
