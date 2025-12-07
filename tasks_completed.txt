@@ -1,0 +1,49 @@
+Task 1 — Fix Login Verification
+I corrected the broken password verification logic. The project compared the hashed password directly with the plain password, which always failed. I replaced this with proper Argon2 verification using:
+pwd_context.verify(password, user.hashed_password)
+I also switched the hashing backend from bcrypt to Argon2 because bcrypt caused issues on Python 3.12.
+Result:
+Login now works correctly with valid credentials and fails for invalid ones.
+
+
+Task 2 — Registration Hardening
+I improved security and validation during user registration by adding:
+Duplicate email detection
+Strong password rules (minimum 8 characters, must include letters and numbers)
+Argon2 hashing for safe password storage
+Meaningful error responses
+
+Result:
+Registration now prevents weak passwords and duplicate accounts.
+
+
+Task 3 — Implement /records/search Endpoint
+I built an advanced search endpoint for filtering stored records.
+It supports:
+Category filter
+Date range filter (start_date, end_date)
+Multiple filters together
+
+Result:
+Users can now query records based on category and time period.
+
+
+Task 4 — Implement /records/stats Endpoint
+I created a record statistics endpoint that aggregates:
+Total count of records per category
+Most recent created_at timestamp for each category
+This uses an efficient SQLAlchemy GROUP BY query.
+
+Result:
+The system now provides quick insights into stored data.
+
+
+Task 5 — Bonus: Error Handling Improvements
+I improved error handling across the project by adding:
+Safe database session handling
+Fallback responses for database failures
+Try/except blocks in key CRUD operations
+
+
+Result:
+The backend now behaves more reliably and avoids silent crashes.
