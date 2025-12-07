@@ -20,9 +20,10 @@ def healthcheck():
 def register_user(payload: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
         user = crud.create_user(db, payload)
-    except IntegrityError:
-        raise HTTPException(status_code=400, detail="Email already registered")
+    except ValueError as e:   # catches theweak password + duplicate email
+        raise HTTPException(status_code=400, detail=str(e))
     return user
+
 
 
 @app.post("/auth/login", response_model=schemas.TokenResponse)
