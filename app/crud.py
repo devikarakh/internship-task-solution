@@ -5,14 +5,17 @@ from passlib.context import CryptContext
 
 from . import models, schemas
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 def authenticate_user(db: Session, email: str, password: str) -> Optional[models.User]:
     user = get_user_by_email(db, email=email)
     if not user:
         return None
-    if user.hashed_password != password:
+
+    # corrected password verification
+    if not pwd_context.verify(password, user.hashed_password):
         return None
+
     return user
 
 
