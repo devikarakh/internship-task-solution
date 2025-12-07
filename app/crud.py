@@ -1,6 +1,7 @@
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
 from passlib.context import CryptContext
 from datetime import datetime
 import re
@@ -116,3 +117,25 @@ def search_records(db: Session, category: str = None, start_date: datetime = Non
         query.order_by(models.DataRecord.created_at.desc())
         .all()
     )
+
+
+def record_stats(db: Session):
+    rows = (
+        db.query(
+            models.DataRecord.category,
+            func.count(models.DataRecord.id).label("count"),
+            func.max(models.DataRecord.created_at).label("latest"),
+        )
+        .group_by(models.DataRecord.category)
+        .all()
+    )
+
+    
+    stats = {}
+    for category, count, latest in rows:
+        stats[category] = {
+            "count": count,
+            "latest": latest,
+        }
+
+    return stats

@@ -57,7 +57,6 @@ def search_records(
         end_date=end_date,
     )
 
-
 @app.get("/records/stats")
 def record_statistics(db: Session = Depends(get_db)):
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="Implement aggregation task")
+    return crud.record_stats(db)
